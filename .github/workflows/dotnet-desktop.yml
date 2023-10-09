@@ -1,9 +1,8 @@
 name: CI
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -27,3 +26,14 @@ jobs:
 
     - name: Build solution
       run: msbuild RT-890-Flasher.sln -t:rebuild -property:Configuration=Release
+
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: RT-890-Flasher
+        path: bin\Release\RT-890-Flasher.exe
+
+    - name: 'Create Release'
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "RT-890-Flasher.exe"
